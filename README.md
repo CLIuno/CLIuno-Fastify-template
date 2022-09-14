@@ -1,23 +1,13 @@
-# Getting Started with Fastify-CLI [Fastify-CLI](https://www.npmjs.com/package/fastify-cli)
-This project was bootstrapped with Fastify-CLI.
+# Under All in One Project
 
-## Available Scripts
+# Please Dont Open This Project
 
-In the project directory, you can run:
+## Okey its not ready yet
 
-### `npm run dev`
+### its contain a lot of frameworks with diff lang
 
-To start the app in dev mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## JS - JAVA - Python - PHP (until now)
 
-### `npm start`
+# Okey here is the deal All Backend Frameworks works on PORT = 3000
 
-For production mode
-
-### `npm run test`
-
-Run the test cases.
-
-## Learn More
-
-To learn Fastify, check out the [Fastify documentation](https://www.fastify.io/docs/latest/).
+# and the Frontend Frameworks works on PORT = 8000
