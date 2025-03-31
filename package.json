@@ -23,7 +23,7 @@
   "dependencies": {
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
-    "fastify": "^5.2.0",
+    "fastify": "^5.2.2",
     "fastify-cli": "^7.3.0",
     "fastify-plugin": "^5.0.1",
     "hi-base32": "^0.5.1",
