@@ -48,6 +48,9 @@ export class User {
     @Column('text', { nullable: true, unique: true })
     phone: string | null
 
+    @Column('text', { nullable: true })
+    avatar_url: string | null
+
     @Column('text')
     password: string
 
@@ -141,7 +144,7 @@ export class Post {
     content: string
 
     @Column('text', { nullable: true })
-    imageUrl: string | null
+    image_url: string | null
 
     @Column({ type: 'boolean', default: false })
     is_paid: boolean

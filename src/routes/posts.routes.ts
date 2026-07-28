@@ -27,7 +27,13 @@ export default async function postRoutes(app: FastifyInstance) {
     })
 
     app.post('/', async (request, reply) => {
-        const { title, content } = (request.body ?? {}) as { title?: string; content?: string }
+        // frontends may send either casing; image_url is what goes back out
+        const { title, content, image_url, imageUrl } = (request.body ?? {}) as {
+            title?: string
+            content?: string
+            image_url?: string
+            imageUrl?: string
+        }
         if (!title || !content) {
             return reply
                 .status(400)
@@ -38,7 +44,12 @@ export default async function postRoutes(app: FastifyInstance) {
             return reply.status(404).send({ status: 'error', message: 'User not found' })
         }
 
-        const post = posts().create({ title, content, user })
+        const post = posts().create({
+            title,
+            content,
+            image_url: image_url ?? imageUrl ?? null,
+            user,
+        })
         const saved = await posts().save(post)
         return reply.status(201).send({
             status: 'success',
@@ -65,10 +76,12 @@ export default async function postRoutes(app: FastifyInstance) {
         if (!post) {
             return reply.status(404).send({ status: 'error', message: 'Post not found' })
         }
-        const { title, content, imageUrl } = (request.body ?? {}) as Partial<Post>
+        const { title, content, image_url } = (request.body ?? {}) as Partial<Post>
+        const { imageUrl } = (request.body ?? {}) as { imageUrl?: string }
         if (title !== undefined) post.title = title
         if (content !== undefined) post.content = content
-        if (imageUrl !== undefined) post.imageUrl = imageUrl
+        if (image_url !== undefined) post.image_url = image_url
+        else if (imageUrl !== undefined) post.image_url = imageUrl
         await posts().save(post)
         return reply.send({ status: 'success', message: 'Post updated', data: { post } })
     })

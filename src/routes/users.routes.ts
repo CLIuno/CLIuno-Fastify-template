@@ -26,10 +26,11 @@ export default async function userRoutes(app: FastifyInstance) {
         if (!user) {
             return reply.status(404).send({ status: 'warning', message: 'User not found' })
         }
-        const { first_name, last_name, phone } = (request.body ?? {}) as Partial<User>
+        const { first_name, last_name, phone, avatar_url } = (request.body ?? {}) as Partial<User>
         if (first_name !== undefined) user.first_name = first_name
         if (last_name !== undefined) user.last_name = last_name
         if (phone !== undefined) user.phone = phone
+        if (avatar_url !== undefined) user.avatar_url = avatar_url
         await users().save(user)
         return reply.send({
             status: 'success',
@@ -99,10 +100,11 @@ export default async function userRoutes(app: FastifyInstance) {
         if (!user) {
             return reply.status(404).send({ status: 'warning', message: 'User not found' })
         }
-        const { first_name, last_name, phone } = (request.body ?? {}) as Partial<User>
+        const { first_name, last_name, phone, avatar_url } = (request.body ?? {}) as Partial<User>
         if (first_name !== undefined) user.first_name = first_name
         if (last_name !== undefined) user.last_name = last_name
         if (phone !== undefined) user.phone = phone
+        if (avatar_url !== undefined) user.avatar_url = avatar_url
         await users().save(user)
         return reply.send({ status: 'success', data: { user: safeUser(user) } })
     })

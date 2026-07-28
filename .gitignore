@@ -60,3 +60,7 @@ dist
 # local sqlite databases
 *.sqlite
 *.sqlite3
+
+# uploaded images
+uploads/*
+!uploads/.gitkeep

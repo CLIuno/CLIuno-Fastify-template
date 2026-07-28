@@ -1,5 +1,7 @@
 import 'reflect-metadata'
 import cors from '@fastify/cors'
+import multipart from '@fastify/multipart'
+import fastifyStatic from '@fastify/static'
 import dotenv from 'dotenv'
 import Fastify from 'fastify'
 
@@ -9,7 +11,9 @@ import followRoutes from './routes/follows.routes'
 import postRoutes from './routes/posts.routes'
 import roleRoutes from './routes/roles.routes'
 import todoRoutes from './routes/todos.routes'
+import uploadRoutes from './routes/uploads.routes'
 import userRoutes from './routes/users.routes'
+import { MAX_UPLOAD_BYTES, ensureUploadDir } from './upload'
 
 dotenv.config()
 
@@ -21,6 +25,9 @@ async function main() {
 
     const app = Fastify({ logger: process.env.NODE_ENV !== 'test' })
     await app.register(cors, { origin: true })
+    await app.register(multipart, { limits: { fileSize: MAX_UPLOAD_BYTES, files: 1 } })
+    // Uploaded images are public and unversioned — no /api/v1 prefix.
+    await app.register(fastifyStatic, { root: ensureUploadDir(), prefix: '/uploads/' })
 
     // Clients send Content-Type: application/json even on bodyless requests
     // (logout, follow, deletes) — treat an empty body as an empty object.
@@ -43,6 +50,7 @@ async function main() {
     await app.register(postRoutes, { prefix: `${prefix}/posts` })
     await app.register(followRoutes, { prefix: `${prefix}/follows` })
     await app.register(roleRoutes, { prefix: `${prefix}/roles` })
+    await app.register(uploadRoutes, { prefix: `${prefix}/uploads` })
 
     app.get('/', async () => ({ status: 'success', message: 'CLIuno Fastify API' }))
 
