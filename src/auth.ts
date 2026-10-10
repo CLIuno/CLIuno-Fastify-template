@@ -56,7 +56,7 @@ export async function authenticate(request: FastifyRequest, reply: FastifyReply)
 export async function adminOnly(request: FastifyRequest, reply: FastifyReply) {
     const user = await db.getRepository(User).findOne({
         where: { id: request.user.id },
-        relations: ['role'],
+        relations: { role: true },
     })
     if (user?.role?.name !== 'admin') {
         return reply.status(403).send({ status: 'error', message: 'Forbidden: Permission denied' })
@@ -64,7 +64,9 @@ export async function adminOnly(request: FastifyRequest, reply: FastifyReply) {
 }
 
 export async function currentUser(request: FastifyRequest): Promise<User | null> {
-    return db.getRepository(User).findOne({ where: { id: request.user.id }, relations: ['role'] })
+    return db
+        .getRepository(User)
+        .findOne({ where: { id: request.user.id }, relations: { role: true } })
 }
 
 export { safeUser }

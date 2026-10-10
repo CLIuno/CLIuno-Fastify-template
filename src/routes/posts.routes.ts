@@ -11,7 +11,7 @@ export default async function postRoutes(app: FastifyInstance) {
 
     app.get('/', async (_request, reply) => {
         const all = await posts().find({
-            relations: ['user', 'comments', 'comments.user'],
+            relations: { user: true, comments: { user: true } },
             order: { createdAt: 'DESC' },
         })
         return reply.send({ status: 'success', data: { posts: all } })
@@ -20,7 +20,7 @@ export default async function postRoutes(app: FastifyInstance) {
     app.get('/current-user', async (request, reply) => {
         const mine = await posts().find({
             where: { user: { id: request.user.id } },
-            relations: ['user', 'comments', 'comments.user'],
+            relations: { user: true, comments: { user: true } },
             order: { createdAt: 'DESC' },
         })
         return reply.send({ status: 'success', data: { posts: mine } })
@@ -62,7 +62,7 @@ export default async function postRoutes(app: FastifyInstance) {
         const { id } = request.params as { id: string }
         const post = await posts().findOne({
             where: { id },
-            relations: ['user', 'comments', 'comments.user'],
+            relations: { user: true, comments: { user: true } },
         })
         if (!post) {
             return reply.status(404).send({ status: 'error', message: 'Post not found' })
@@ -72,7 +72,7 @@ export default async function postRoutes(app: FastifyInstance) {
 
     app.patch('/:id', async (request, reply) => {
         const { id } = request.params as { id: string }
-        const post = await posts().findOne({ where: { id }, relations: ['user'] })
+        const post = await posts().findOne({ where: { id }, relations: { user: true } })
         if (!post) {
             return reply.status(404).send({ status: 'error', message: 'Post not found' })
         }
@@ -98,7 +98,7 @@ export default async function postRoutes(app: FastifyInstance) {
 
     app.get('/:id/user', async (request, reply) => {
         const { id } = request.params as { id: string }
-        const post = await posts().findOne({ where: { id }, relations: ['user'] })
+        const post = await posts().findOne({ where: { id }, relations: { user: true } })
         if (!post) {
             return reply.status(404).send({ status: 'error', message: 'Post not found' })
         }
@@ -109,7 +109,7 @@ export default async function postRoutes(app: FastifyInstance) {
         const { postId } = request.params as { postId: string }
         const list = await comments().find({
             where: { post: { id: postId } },
-            relations: ['user'],
+            relations: { user: true },
             order: { createdAt: 'ASC' },
         })
         return reply.send({ status: 'success', data: { comments: list } })
@@ -141,7 +141,7 @@ export default async function postRoutes(app: FastifyInstance) {
 
     app.patch('/:postId/comments/:id', async (request, reply) => {
         const { id } = request.params as { id: string }
-        const comment = await comments().findOne({ where: { id }, relations: ['user'] })
+        const comment = await comments().findOne({ where: { id }, relations: { user: true } })
         if (!comment) {
             return reply.status(404).send({ status: 'error', message: 'Comment not found' })
         }

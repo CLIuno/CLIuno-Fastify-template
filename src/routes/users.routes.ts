@@ -9,12 +9,15 @@ export default async function userRoutes(app: FastifyInstance) {
     app.addHook('preHandler', authenticate)
 
     app.get('/', async (_request, reply) => {
-        const all = await users().find({ relations: ['role'] })
+        const all = await users().find({ relations: { role: true } })
         return reply.send({ status: 'success', data: { users: all.map(safeUser) } })
     })
 
     app.get('/current', async (request, reply) => {
-        const user = await users().findOne({ where: { id: request.user.id }, relations: ['role'] })
+        const user = await users().findOne({
+            where: { id: request.user.id },
+            relations: { role: true },
+        })
         if (!user) {
             return reply.status(404).send({ status: 'warning', message: 'User not found' })
         }
@@ -79,7 +82,7 @@ export default async function userRoutes(app: FastifyInstance) {
         }
         const posts = await db.getRepository(Post).find({
             where: { user: { id } },
-            relations: ['user', 'comments', 'comments.user'],
+            relations: { user: true, comments: { user: true } },
             order: { createdAt: 'DESC' },
         })
         return reply.send({ status: 'success', message: 'Posts', data: { posts } })
@@ -87,7 +90,7 @@ export default async function userRoutes(app: FastifyInstance) {
 
     app.get('/:id/roles', async (request, reply) => {
         const { id } = request.params as { id: string }
-        const user = await users().findOne({ where: { id }, relations: ['role'] })
+        const user = await users().findOne({ where: { id }, relations: { role: true } })
         if (!user) {
             return reply.status(404).send({ status: 'warning', message: 'User not found' })
         }
