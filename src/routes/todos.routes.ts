@@ -9,14 +9,14 @@ export default async function todoRoutes(app: FastifyInstance) {
     app.addHook('preHandler', authenticate)
 
     app.get('/', async (_request, reply) => {
-        const all = await todos().find({ relations: ['user'], order: { createdAt: 'DESC' } })
+        const all = await todos().find({ relations: { user: true }, order: { createdAt: 'DESC' } })
         return reply.send({ status: 'success', data: { todos: all } })
     })
 
     app.get('/current-user', async (request, reply) => {
         const mine = await todos().find({
             where: { user: { id: request.user.id } },
-            relations: ['user'],
+            relations: { user: true },
             order: { createdAt: 'DESC' },
         })
         return reply.send({ status: 'success', data: { todos: mine } })
@@ -46,7 +46,7 @@ export default async function todoRoutes(app: FastifyInstance) {
 
     app.get('/:id', async (request, reply) => {
         const { id } = request.params as { id: string }
-        const todo = await todos().findOne({ where: { id }, relations: ['user'] })
+        const todo = await todos().findOne({ where: { id }, relations: { user: true } })
         if (!todo) {
             return reply.status(404).send({ status: 'error', message: 'Todo not found' })
         }
@@ -55,7 +55,7 @@ export default async function todoRoutes(app: FastifyInstance) {
 
     app.patch('/:id/toggle', async (request, reply) => {
         const { id } = request.params as { id: string }
-        const todo = await todos().findOne({ where: { id }, relations: ['user'] })
+        const todo = await todos().findOne({ where: { id }, relations: { user: true } })
         if (!todo) {
             return reply.status(404).send({ status: 'error', message: 'Todo not found' })
         }
@@ -66,7 +66,7 @@ export default async function todoRoutes(app: FastifyInstance) {
 
     app.patch('/:id', async (request, reply) => {
         const { id } = request.params as { id: string }
-        const todo = await todos().findOne({ where: { id }, relations: ['user'] })
+        const todo = await todos().findOne({ where: { id }, relations: { user: true } })
         if (!todo) {
             return reply.status(404).send({ status: 'error', message: 'Todo not found' })
         }

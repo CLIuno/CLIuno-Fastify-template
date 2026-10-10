@@ -52,7 +52,7 @@ export default async function followRoutes(app: FastifyInstance) {
         }
         const list = await follows().find({
             where: { following: { id: target.id } },
-            relations: ['follower'],
+            relations: { follower: true },
         })
         return reply.send({
             status: 'success',
@@ -67,7 +67,7 @@ export default async function followRoutes(app: FastifyInstance) {
         }
         const list = await follows().find({
             where: { follower: { id: target.id } },
-            relations: ['following'],
+            relations: { following: true },
         })
         return reply.send({
             status: 'success',
