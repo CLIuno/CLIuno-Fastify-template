@@ -43,3 +43,16 @@ Env (all defaulted for dev): `PORT`, `API_VERSION`, `JWT_SECRET_KEY`,
 
 oxc-only lint/format (`semi: false`, single quotes, 4-space); prettier for json/md;
 conventional commits (commitlint + husky); pnpm build approvals in `pnpm-workspace.yaml`.
+
+## AI agents (Claude Code and friends)
+
+- **Check the CLIuno skills first**: `npx cliuno@latest skills status` — if any is
+  `missing`/`outdated`, run `npx cliuno@latest skills install` (adds `.claude/skills/cliuno-*`:
+  the generator workflow, the scaffold guide, and the shared REST contract).
+- **Generate resources, don't hand-write them**:
+  `npx cliuno@latest make:resource Product --fields name:string,price:number,inStock:boolean`
+  creates `src/routes/products.routes.ts`, `src/__tests__/product.test.ts` and registers it in `src/entities.ts`, `src/db.ts`, `src/app.ts`, following this
+  template's conventions and the `{status, message, data}` contract. `--dry-run` previews,
+  re-running never duplicates registrations, `--force` overwrites.
+- Single pieces: `make:model`, `make:controller`, `make:test`. `npx cliuno@latest make` lists them.
+- Then edit fields/business logic only, and run the gates above.
